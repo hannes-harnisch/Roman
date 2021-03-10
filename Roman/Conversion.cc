@@ -1,4 +1,5 @@
 module;
+#include <cctype>
 #include <sstream>
 export module Conversion;
 
@@ -15,6 +16,9 @@ const RomanNumeralMapping Map[] {
 
 export std::string numberToNumeral(int number)
 {
+	if(number < 1)
+		return {};
+
 	std::stringstream numeral;
 	for(auto& mapping : Map)
 	{
@@ -53,4 +57,13 @@ export int numeralToNumber(const std::string& numeral)
 	if(numeralPos < numeral.end())
 		return 0;
 	return number;
+}
+
+export std::string toUpper(const std::string& str)
+{
+	std::string upper(str.length(), '\0');
+	auto upperPos {upper.begin()};
+	for(char character : str)
+		*upperPos++ = std::toupper(character);
+	return upper;
 }
