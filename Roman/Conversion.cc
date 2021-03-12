@@ -31,10 +31,17 @@ export std::string numberToNumeral(int number)
 	return numeral.str();
 }
 
+int firstDecimalDigit(int n)
+{
+	while(n >= 10)
+		n /= 10;
+	return n;
+}
+
 export int numeralToNumber(const std::string& numeral)
 {
 	int number {}, mappingsToSkip {};
-	auto numeralPos {numeral.begin()};
+	auto chars {numeral.begin()};
 	for(auto& mapping : Map)
 	{
 		if(mappingsToSkip)
@@ -42,19 +49,28 @@ export int numeralToNumber(const std::string& numeral)
 			--mappingsToSkip;
 			continue;
 		}
-		if(numeralPos < numeral.end() - 1 && std::string({*numeralPos, numeralPos[1]}) == mapping.Numeral)
+
+		bool moreThanOneCharLeft = chars < numeral.end() - 1;
+		if(moreThanOneCharLeft && std::string({*chars, chars[1]}) == mapping.Numeral)
 		{
-			numeralPos += 2;
+			chars += 2;
 			number += mapping.Number;
 			mappingsToSkip = mapping.Number % 9 == 0 ? 3 : 1;
 		}
-		while(numeralPos < numeral.end() && std::string({*numeralPos}) == mapping.Numeral)
+
+		int charsRepeated {};
+		while(chars < numeral.end() && std::string({*chars}) == mapping.Numeral)
 		{
-			++numeralPos;
+			bool tooManyRepeatableNumerals {++charsRepeated > 4 && mapping.Number != Map[0].Number};
+			bool tooManyLimitedNumerals {charsRepeated > 1 && firstDecimalDigit(mapping.Number) == 5};
+			if(tooManyRepeatableNumerals || tooManyLimitedNumerals)
+				return 0;
+
+			++chars;
 			number += mapping.Number;
 		}
 	}
-	if(numeralPos < numeral.end())
+	if(chars < numeral.end())
 		return 0;
 	return number;
 }
