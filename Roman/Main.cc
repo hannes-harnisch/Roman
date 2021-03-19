@@ -5,40 +5,40 @@
 
 import Conversion;
 
-const std::regex NumberRegex("\\d+");
-const std::regex NumeralRegex("[IVXLCDM]+");
-
 void processNumberToNumeral(const std::string& input)
 {
 	int number {std::stoi(input)};
-	std::string numeral {numberToNumeral(number)};
+	auto numeral {numberToNumeral(number)};
 
-	if(numeral.empty())
-		std::printf("Cannot convert %i to a Roman numeral.", number);
+	if(numeral)
+		std::printf("%s\t->\t%s", input.data(), numeral->data());
 	else
-		std::printf("%s", numeral.data());
+		std::printf("Cannot convert %i to a Roman numeral.", number);
 }
 
 void processNumeralToNumber(const std::string& input)
 {
-	int number {numeralToNumber(input)};
+	auto number {numeralToNumber(input)};
 	if(number)
-		std::printf("%i", number);
+		std::printf("%s\t->\t%i", input.data(), *number);
 	else
 		std::printf("%s is not a valid Roman numeral.", input.data());
 }
 
 int main(int argc, char* argv[])
 {
-	std::vector<std::string> commandLineArgs(argv + 1, argv + argc);
+	const std::regex numberRegex {"[-\\d]+"};
+	const std::regex numeralRegex {"[IVXLCDM]+"};
+	std::vector<std::string> commandLineArgs {argv + 1, argv + argc};
+
 	for(auto& input : commandLineArgs)
 	{
 		input = toUpper(input);
 
 		std::smatch match;
-		if(std::regex_match(input, match, NumberRegex))
+		if(std::regex_match(input, match, numberRegex))
 			processNumberToNumeral(input);
-		else if(std::regex_match(input, match, NumeralRegex))
+		else if(std::regex_match(input, match, numeralRegex))
 			processNumeralToNumber(input);
 		else
 			std::printf("Invalid input.");

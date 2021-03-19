@@ -1,5 +1,6 @@
 module;
 #include <cctype>
+#include <optional>
 #include <sstream>
 export module Conversion;
 
@@ -14,7 +15,7 @@ const RomanNumeralMapping Map[] {
 	{40, "XL"},	 {10, "X"},	  {9, "IX"},  {5, "V"},	   {4, "IV"},  {1, "I"},
 };
 
-export std::string numberToNumeral(int number)
+export std::optional<std::string> numberToNumeral(int number)
 {
 	if(number < 1)
 		return {};
@@ -38,7 +39,7 @@ int firstDecimalDigit(int n)
 	return n;
 }
 
-export int numeralToNumber(const std::string& numeral)
+export std::optional<int> numeralToNumber(const std::string& numeral)
 {
 	int number {}, mappingsToSkip {};
 	auto chars {numeral.begin()};
@@ -64,14 +65,14 @@ export int numeralToNumber(const std::string& numeral)
 			bool tooManyRepeatableNumerals {++charsRepeated > 4 && mapping.Number != Map[0].Number};
 			bool tooManyLimitedNumerals {charsRepeated > 1 && firstDecimalDigit(mapping.Number) == 5};
 			if(tooManyRepeatableNumerals || tooManyLimitedNumerals)
-				return 0;
+				return {};
 
 			++chars;
 			number += mapping.Number;
 		}
 	}
 	if(chars < numeral.end())
-		return 0;
+		return {};
 	return number;
 }
 
