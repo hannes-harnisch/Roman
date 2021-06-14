@@ -2,15 +2,16 @@ module;
 #include <cctype>
 #include <optional>
 #include <sstream>
+#include <string_view>
 export module Conversion;
 
 struct RomanNumeralMapping
 {
-	int Number;
-	std::string Numeral;
+	int number;
+	std::string_view numeral;
 };
 
-const RomanNumeralMapping Map[] {
+constexpr RomanNumeralMapping Map[] {
 	{1000, "M"}, {900, "CM"}, {500, "D"}, {400, "CD"}, {100, "C"}, {90, "XC"}, {50, "L"},
 	{40, "XL"},	 {10, "X"},	  {9, "IX"},  {5, "V"},	   {4, "IV"},  {1, "I"},
 };
@@ -23,10 +24,10 @@ export std::optional<std::string> numberToNumeral(int number)
 	std::stringstream numeral;
 	for(auto& mapping : Map)
 	{
-		while(number - mapping.Number >= 0)
+		while(number - mapping.number >= 0)
 		{
-			number -= mapping.Number;
-			numeral << mapping.Numeral;
+			number -= mapping.number;
+			numeral << mapping.numeral;
 		}
 	}
 	return numeral.str();
@@ -52,23 +53,23 @@ export std::optional<int> numeralToNumber(const std::string& numeral)
 		}
 
 		bool moreThanOneCharLeft = chars < numeral.end() - 1;
-		if(moreThanOneCharLeft && std::string({*chars, chars[1]}) == mapping.Numeral)
+		if(moreThanOneCharLeft && std::string_view(chars, chars + 2) == mapping.numeral)
 		{
 			chars += 2;
-			number += mapping.Number;
-			mappingsToSkip = mapping.Number % 9 == 0 ? 3 : 1;
+			number += mapping.number;
+			mappingsToSkip = mapping.number % 9 == 0 ? 3 : 1;
 		}
 
 		int charsRepeated {};
-		while(chars < numeral.end() && std::string({*chars}) == mapping.Numeral)
+		while(chars < numeral.end() && std::string_view(chars, chars + 1) == mapping.numeral)
 		{
-			bool tooManyRepeatableNumerals = ++charsRepeated > 4 && mapping.Number != Map[0].Number;
-			bool tooManyLimitedNumerals	   = charsRepeated > 1 && firstDecimalDigit(mapping.Number) == 5;
+			bool tooManyRepeatableNumerals = ++charsRepeated > 4 && mapping.number != Map[0].number;
+			bool tooManyLimitedNumerals	   = charsRepeated > 1 && firstDecimalDigit(mapping.number) == 5;
 			if(tooManyRepeatableNumerals || tooManyLimitedNumerals)
 				return {};
 
 			++chars;
-			number += mapping.Number;
+			number += mapping.number;
 		}
 	}
 	if(chars < numeral.end())
@@ -76,7 +77,7 @@ export std::optional<int> numeralToNumber(const std::string& numeral)
 	return number;
 }
 
-export std::string toUpper(const std::string& str)
+export std::string toUpper(std::string_view str)
 {
 	std::string upper(str.length(), '\0');
 	auto upperPos = upper.begin();

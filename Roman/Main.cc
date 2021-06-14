@@ -5,7 +5,7 @@
 
 import Conversion;
 
-void processNumberToNumeral(const std::string& input)
+void processNumberToNumeral(std::string const& input)
 {
 	int number	 = std::stoi(input);
 	auto numeral = numberToNumeral(number);
@@ -16,7 +16,7 @@ void processNumberToNumeral(const std::string& input)
 		std::printf("Cannot convert %i to a Roman numeral.", number);
 }
 
-void processNumeralToNumber(const std::string& input)
+void processNumeralToNumber(std::string const& input)
 {
 	auto number = numeralToNumber(input);
 	if(number)
@@ -27,8 +27,8 @@ void processNumeralToNumber(const std::string& input)
 
 int main(int argc, char* argv[])
 {
-	const std::regex numberRegex("[-\\d]+");
-	const std::regex numeralRegex("[IVXLCDM]+");
+	std::regex const numberRegex("[-\\d]+");
+	std::regex const numeralRegex("[IVXLCDM]+");
 	std::vector<std::string> commandLineArgs(argv + 1, argv + argc);
 
 	for(auto& input : commandLineArgs)
