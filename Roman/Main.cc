@@ -7,8 +7,8 @@ import Conversion;
 
 void processNumberToNumeral(const std::string& input)
 {
-	int number {std::stoi(input)};
-	auto numeral {numberToNumeral(number)};
+	int number	 = std::stoi(input);
+	auto numeral = numberToNumeral(number);
 
 	if(numeral)
 		std::printf("%s\t->\t%s", input.data(), numeral->data());
@@ -18,7 +18,7 @@ void processNumberToNumeral(const std::string& input)
 
 void processNumeralToNumber(const std::string& input)
 {
-	auto number {numeralToNumber(input)};
+	auto number = numeralToNumber(input);
 	if(number)
 		std::printf("%s\t->\t%i", input.data(), *number);
 	else
@@ -27,9 +27,9 @@ void processNumeralToNumber(const std::string& input)
 
 int main(int argc, char* argv[])
 {
-	const std::regex numberRegex {"[-\\d]+"};
-	const std::regex numeralRegex {"[IVXLCDM]+"};
-	std::vector<std::string> commandLineArgs {argv + 1, argv + argc};
+	const std::regex numberRegex("[-\\d]+");
+	const std::regex numeralRegex("[IVXLCDM]+");
+	std::vector<std::string> commandLineArgs(argv + 1, argv + argc);
 
 	for(auto& input : commandLineArgs)
 	{

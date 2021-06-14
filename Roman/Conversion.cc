@@ -42,7 +42,7 @@ int firstDecimalDigit(int n)
 export std::optional<int> numeralToNumber(const std::string& numeral)
 {
 	int number {}, mappingsToSkip {};
-	auto chars {numeral.begin()};
+	auto chars = numeral.begin();
 	for(auto& mapping : Map)
 	{
 		if(mappingsToSkip)
@@ -62,8 +62,8 @@ export std::optional<int> numeralToNumber(const std::string& numeral)
 		int charsRepeated {};
 		while(chars < numeral.end() && std::string({*chars}) == mapping.Numeral)
 		{
-			bool tooManyRepeatableNumerals {++charsRepeated > 4 && mapping.Number != Map[0].Number};
-			bool tooManyLimitedNumerals {charsRepeated > 1 && firstDecimalDigit(mapping.Number) == 5};
+			bool tooManyRepeatableNumerals = ++charsRepeated > 4 && mapping.Number != Map[0].Number;
+			bool tooManyLimitedNumerals	   = charsRepeated > 1 && firstDecimalDigit(mapping.Number) == 5;
 			if(tooManyRepeatableNumerals || tooManyLimitedNumerals)
 				return {};
 
@@ -79,8 +79,8 @@ export std::optional<int> numeralToNumber(const std::string& numeral)
 export std::string toUpper(const std::string& str)
 {
 	std::string upper(str.length(), '\0');
-	auto upperPos {upper.begin()};
+	auto upperPos = upper.begin();
 	for(char character : str)
-		*upperPos++ = std::toupper(character);
+		*upperPos++ = static_cast<char>(std::toupper(character));
 	return upper;
 }

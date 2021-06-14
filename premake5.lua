@@ -7,11 +7,9 @@ workspace 'Roman'
 	startproject		'Roman'
 	language			'C++'
 	cppdialect			'C++latest'
+	warnings			'Extra'
 	conformancemode		'On'
 	staticruntime		'On'
-	floatingpoint		'Fast'
-	rtti				'Off'
-	exceptionhandling	'Off'
 	buildoptions		{ '/Zc:rvalueCast' }
 	files				{ '**.cc', '**.hh' }
 	objdir				( '.bin_int/' .. output_dir .. '/%{prj.name}' )
@@ -19,10 +17,10 @@ workspace 'Roman'
 	debugdir			( '.bin/'	  .. output_dir .. '/%{prj.name}' )
 
 	filter 'files:**.cc'
-		compileas		'C++ModuleInterface'
+		compileas		'Module'
 
 	filter 'files:**.hh'
-		compileas		'C++HeaderUnit'
+		compileas		'HeaderUnit'
 
 	filter 'configurations:Debug'
 		runtime			'Debug'
